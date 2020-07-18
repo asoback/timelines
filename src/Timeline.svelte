@@ -209,6 +209,15 @@
         z-index: 0;
     } 
 
+    .interest_element {
+        border-bottom: 1px solid #AAAAAA;
+        margin-top: 10px;
+        display: block;
+        position: relative;
+        text-align: center;
+        color: #555555;
+    }
+
 </style>
 
 
@@ -235,8 +244,10 @@
                  {#if Number.isInteger(t.time_unit)}
                         <span>{t.time_unit}{timeunits}</span>
                         {#each t.interest_account as account(account.label)}
+                        <div class="interest_element">
                             <div>{account.label}</div>
                             <div>{account.amount}</div>
+                        </div>
                         {/each}
                  {/if}
                  
