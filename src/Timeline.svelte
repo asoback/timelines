@@ -1,6 +1,9 @@
 <script>
-    import { flip } from 'svelte/animate';
-	import { dndzone } from 'svelte-dnd-action';
+    // import { spring } from 'svelte/motion';
+    // import { flip } from 'svelte/animate';
+    // import { dndzone } from 'svelte-dnd-action';
+    import {tweened } from 'svelte/motion';
+    import { draggable } from './draggable.js';
     import AddItem from './AddItem.svelte';
 
     let timeunits = "years";
@@ -9,6 +12,11 @@
 	let end_time = 2030;
     let absolute_time = false;
     let steps_per_unit = 4;
+    let time_points = [];
+
+    for (let i = 0; i < (end_time - start_time) * steps_per_unit; i++){
+            time_points.push(i/4);
+    }
     
     const flipDurationMs = 300;
 
@@ -19,36 +27,38 @@
             items[i].time_point = i/4;
         }
     }
-    
-
-    for (let i = 0; i < (end_time - start_time) * steps_per_unit; i++){
-        const event = {
-            id: i,
-            time_point: i/4,
-            label: ''
-        }
-
-        items.push(event)
-    }
 
     const handleAddEvent = (e) => {
-        console.log(e.detail.text)
-        for (let i = items.length -1; i >= 0; i--) {
-            if (items[i].label == '') {
-               items[i].label = e.detail.text;
-                break;
-            }
+        let new_id = 0;
+        if (items.length > 0) {
+            new_id = items[items.length - 1].id + 1;
         }
-
+        items[items.length] = {
+            id: new_id,
+            label: e.detail.text,
+            left_px: 100
+        };
     }
+
+    
+
+	function handlePanMove(event) {
+        const id = event.target.dataset["eventid"];
+        items[id].left_px += event.detail.dx;
+        items = items;
+	}
+
+
 </script>
 
 <style>
     .container {
+        display: inline-block;
         position: absolute;
         width: 80%;
+        height: 300px;
         left: 10%;
-		top: 30%;
+		top: 20%;
         overflow-x: auto;
         white-space: nowrap;
         padding: 50px;
@@ -56,6 +66,7 @@
     }
 
     .timeline {
+        position: absolute;
         width: 2000px; /* TODO */
         height: 200px;
         margin: 0 0;
@@ -68,13 +79,15 @@
         position: relative;
         height: 60%;
         width: 50px;
-        top: 60%;
+        top: 100%;
     }
  
     .content {
         display: block;
+        position: absolute;
         height: 100px;
         width: 50px;
+        bottom: 0;
     }
 
     .content:before {
@@ -113,10 +126,17 @@
 
    .timestamp {
         display: inline-block;
-        position: relative;
-        bottom: 0;
+        position: absolute;
+        top: 5px;
         width: 100%;
     } 
+
+    .event_space {
+        display :inline-block;
+        position: absolute;
+        height:100%;
+        width:100%;
+    }
 
 </style>
 
@@ -124,18 +144,28 @@
 <AddItem on:message={handleAddEvent}/>
 
 <div class='container'>
-    <div class='timeline' use:dndzone={{items, flipDurationMs}} on:consider={handleSort} on:finalize={handleSort} >
-    {#each items as item(item.id)}
-        <div  class='event up' animate:flip={{duration:flipDurationMs}}>
-            <div class='content {item.label === '' ? 'hidden' : ''}'>
-                <div class="avatar">{item.label}</div>
-            </div>
-                <div class='timestamp'>
-                {#if Number.isInteger(item.time_point)}
-                    <span>{item.time_point}</span>
-                {/if}
+    <div class='timeline'> <!--use:dndzone={{items, flipDurationMs}} --> 
+        <div class='event_space'>
+            {#each items as item(item.id)}
+                <div 
+                    data-eventid="{item.id}"
+                    use:draggable
+                    on:panmove={handlePanMove}
+                    style="transform:
+                        translate({item.left_px}px, 0px)"
+                    class='content {item.label === '' ? 'hidden' : ''}'>
+                    <div class="avatar">{item.label}</div>
                 </div>
+            {/each}
         </div>
-    {/each}
+        {#each time_points as t}
+        <div  class='event up'>
+            <div class='timestamp'>
+                 {#if Number.isInteger(t)}
+                        <span>{t}</span>
+                 {/if}
+            </div>
+        </div>
+        {/each} 
     </div>
 </div>
