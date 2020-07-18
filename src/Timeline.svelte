@@ -7,12 +7,14 @@
     import AddItem from './AddItem.svelte';
 
     let timeunits = "y";
+    let time_len = 10;
     let items = [];
 	let start_time = 2020;
 	let end_time = 2030;
     let absolute_time = false;
     let steps_per_unit = 4;
     let time_points = [];
+    let timeline_length_px = 2000;
 
     for (let i = 0; i < (end_time - start_time) * steps_per_unit; i++){
             time_points.push(i/4);
@@ -42,6 +44,21 @@
 
     const handleUpdateTime = (e) => {
        timeunits = e.detail.text;
+    }
+
+    const handleUpdateTimeLen = (e) => {
+        time_len = e.detail.text;
+        if (time_points.length > time_len * 4) {
+            console.log("larger");
+            time_points = time_points.slice(0, time_len * 4);
+        } else {
+            console.log("smaller");
+            for (let i = time_points.length; i < time_len * 4; i++) {
+                time_points[time_points.length] = time_points[time_points.length - 1] + 0.25;
+                time_points = time_points;
+            }
+        }
+        timeline_length_px= time_points.length * 50;
     }
 
 	function handlePanMove(event) {
@@ -74,6 +91,7 @@
         margin: 0 0;
         margin-bottom: 10px;
         border-bottom: 6px solid #333333;
+        z-index: 1;
     }
 
     .event {
@@ -127,11 +145,23 @@
         transform: rotate(-45deg);
     }
 
-   .timestamp {
+    .timestamp {
         display: inline-block;
         position: absolute;
         top: 5px;
         width: 100%;
+        padding-left: 4px;
+    } 
+
+   .timestamp:before {
+        display: inline-block;
+        position: absolute;
+        content: '';
+        top: 0%;
+        width: 0px;
+        height: 50%;
+        left: 0%;
+        border-left: 2px solid #333333;
     } 
 
     .event_space {
@@ -141,13 +171,33 @@
         width:100%;
     }
 
+    .small_label {
+       display: inline-block;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 20%;
+    }
+
+    .small_label:before {
+        display: inline-block;
+        position: absolute;
+        content: '';
+        top: 0%;
+        width: 0px;
+        height: 50%;
+        left: 0%;
+        border-left: 1px solid #444444;
+        z-index: 0;
+    } 
+
 </style>
 
 
-<AddItem on:message={handleAddEvent} on:time_label={handleUpdateTime}/>
+<AddItem on:message={handleAddEvent} on:time_label={handleUpdateTime} on:time_len={handleUpdateTimeLen}/>
 
 <div class='container'>
-    <div class='timeline'> <!--use:dndzone={{items, flipDurationMs}} --> 
+    <div class='timeline' style='width: {timeline_length_px}px;'> <!--use:dndzone={{items, flipDurationMs}} --> 
         <div class='event_space'>
             {#each items as item(item.id)}
                 <div 
@@ -163,7 +213,7 @@
         </div>
         {#each time_points as t}
         <div  class='event up'>
-            <div class='timestamp'>
+            <div class='timestamp { Number.isInteger(t) === false ? 'small_label' : ''}'>
                  {#if Number.isInteger(t)}
                         <span>{t}{timeunits}</span>
                  {/if}

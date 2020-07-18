@@ -8,10 +8,15 @@
 	let expanded = false;
 	let time_menu_expanded = false;
 	let event_label = '';
+	let time_len = 10;
 
 	$: dispatch('time_label', {
 			text: time_scale
 		});
+
+	$: dispatch('time_len', {
+		text: time_len
+	});
 
 	const toggle_time_menu = (e) => {
 		time_menu_expanded = !time_menu_expanded;
@@ -81,6 +86,9 @@
 					<option value="w">weeks</option>
 					<option value="d">days</option>
 				</select>
+			</div>
+			<div>
+				<input type=number min=3 max=20 bind:value={time_len}>Duration
 			</div>
 			{/if}
 			{#if !time_menu_expanded}
