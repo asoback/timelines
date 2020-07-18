@@ -11,6 +11,12 @@
 	let time_len = 10;
 	let interest_menu_expanded = false;
 
+	let interest_label = "";
+	let interest_start_date = 0;
+	let interest_start_amount = 0;
+	let interest_rate = 0;
+	let interest_yearly_addition = 0;
+
 	$: dispatch('time_label', {
 			text: time_scale
 		});
@@ -40,6 +46,16 @@
 			event_label = '';
 		}
 	}
+
+	const createNewInterest = (e) => {
+		dispatch('interest', {
+				text: interest_label,
+				start_date: interest_start_date,
+				start_amount: interest_start_amount,
+				rate: interest_rate,
+				yearly_addition: interest_yearly_addition
+		});
+	};
 	
 </script>
 
@@ -109,10 +125,11 @@
 			{/if}
 			{#if interest_menu_expanded}
 				<div transition:fly="{{ y: -100, duration: 700, delay: 600 }}">
-					<input type=number>start date
-					<input type=number>start amount
-					<input type=number>rate of growth
-					<input type=number>yearly growth
+					<input bind:value={interest_label} type=text>Label
+					<input bind:value={interest_start_date} type=number>start date
+					<input bind:value={interest_start_amount} type=number>start amount
+					<input bind:value={interest_rate} type=number>rate of growth
+					<input bind:value={interest_yearly_addition} type=number>yearly addition
 					<button>Submit</button>
 				</div>
 			{/if}
