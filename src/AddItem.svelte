@@ -9,6 +9,7 @@
 	let time_menu_expanded = false;
 	let event_label = '';
 	let time_len = 10;
+	let interest_menu_expanded = false;
 
 	$: dispatch('time_label', {
 			text: time_scale
@@ -20,6 +21,10 @@
 
 	const toggle_time_menu = (e) => {
 		time_menu_expanded = !time_menu_expanded;
+	}
+
+	const toggle_interest_menu = (e) => {
+		interest_menu_expanded = !interest_menu_expanded;
 	}
 
 	const toggle = () => {
@@ -75,10 +80,12 @@
 
 	<div class="container">
 		{#if expanded}
+			{#if !interest_menu_expanded}
 			<button on:click={toggle_time_menu} transition:fly="{{ y: -50, duration: 700 }}">
 				Edit timescale
 			</button>
-			{#if time_menu_expanded}
+			{/if}
+			{#if time_menu_expanded && !interest_menu_expanded}
 			<div >
 				<select bind:value={time_scale}>
 					<option value="y">Years</option>
@@ -91,14 +98,23 @@
 				<input type=number min=3 max=20 bind:value={time_len}>Duration
 			</div>
 			{/if}
-			{#if !time_menu_expanded}
+			{#if !time_menu_expanded && !interest_menu_expanded}
 			<input transition:fly="{{ y: -100, duration: 700 }}" on:keydown='{createNewEvent}' bind:value={event_label} placeholder="New Event Label" >
-			<button transition:fly="{{ y: -150, duration: 700 }}">
+			<!-- <button transition:fly="{{ y: -150, duration: 700 }}">
 				Add label
-			</button>
-			<button transition:fly="{{ y: -200, duration: 700 }}">
+			</button> -->
+			<button transition:fly="{{ y: -200, duration: 700 }}" on:click={toggle_interest_menu}>
 				Add interest calc
 			</button>
+			{/if}
+			{#if interest_menu_expanded}
+				<div transition:fly="{{ y: -100, duration: 700, delay: 600 }}">
+					<input type=number>start date
+					<input type=number>start amount
+					<input type=number>rate of growth
+					<input type=number>yearly growth
+					<button>Submit</button>
+				</div>
 			{/if}
 		{/if}
 	</div>
