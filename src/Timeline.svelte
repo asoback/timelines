@@ -168,7 +168,7 @@
     .timestamp {
         display: inline-block;
         position: absolute;
-        top: 5px;
+        padding-top: 5px;
         width: 100%;
         padding-left: 4px;
     } 

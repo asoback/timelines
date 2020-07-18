@@ -74,11 +74,52 @@
 	}
 	
 	.container {
-		display:grid;
-		width: 15%;
+		display: flexbox;
+		position: relative;
+		float: right;
+
+		/*
+		display: grid;
+		 width: 15%;
 		grid-template-columns:5em;
 		grid-template-rows: 5em;
-		grid-gap: 0.5em
+		grid-gap: 0.5em */
+	}
+
+	.main_menu {
+		display: flexbox;
+		position: relative;
+		float: left;
+		margin-right: 50px;
+		border: 1px solid #CCCCCC;
+		background-color: aliceblue;
+	}
+
+	.main_menu>button {
+		margin:3px;
+	}
+
+	.main_menu>input {
+		margin:3px;
+	}
+
+	.interest_menu {
+		border: 1px solid #CCCCCC;
+		background-color: aliceblue;
+	}
+
+	.interest_menu>button {
+		margin:3px;
+	}
+	.interest_menu>input {
+		margin:3px;
+	}
+
+	label {
+		display:inline;
+		position: relative;
+		margin-right: 10px;
+		margin-right: 2px;
 	}
 </style>
 
@@ -95,8 +136,27 @@
 	{/if}
 	</div>
 
-	<div class="container">
+	<div class="main_menu">
 		{#if expanded}
+			{#if !time_menu_expanded && !interest_menu_expanded}
+			<input transition:fly="{{ y: -100, duration: 700 }}" on:keydown='{createNewEvent}' bind:value={event_label} placeholder="New Event Label" >
+			<!-- <button transition:fly="{{ y: -150, duration: 700 }}">
+				Add label
+			</button> -->
+			<button transition:fly="{{ y: -200, duration: 700 }}" on:click={toggle_interest_menu}>
+				Add interest calc
+			</button>
+			{/if}
+			{#if interest_menu_expanded}
+				<div class="interest_menu" transition:fly="{{ y: -100, duration: 700, delay: 600 }}">
+					<label>Label</label><input bind:value={interest_label} type=text>
+					<label>start date</label><input bind:value={interest_start_date} type=number>
+					<label>start amount</label><input bind:value={interest_start_amount} type=number>
+					<label>rate of growth</label><input bind:value={interest_rate} type=number>
+					<label>yearly addition</label><input bind:value={interest_yearly_addition} type=number>
+					<button on:click={createNewInterest}><label>Submit</button>
+				</div>
+			{/if}
 			{#if !interest_menu_expanded}
 			<button on:click={toggle_time_menu} transition:fly="{{ y: -50, duration: 700 }}">
 				Edit timescale
@@ -114,25 +174,6 @@
 			<div>
 				<input type=number min=3 max=20 bind:value={time_len}>Duration
 			</div>
-			{/if}
-			{#if !time_menu_expanded && !interest_menu_expanded}
-			<input transition:fly="{{ y: -100, duration: 700 }}" on:keydown='{createNewEvent}' bind:value={event_label} placeholder="New Event Label" >
-			<!-- <button transition:fly="{{ y: -150, duration: 700 }}">
-				Add label
-			</button> -->
-			<button transition:fly="{{ y: -200, duration: 700 }}" on:click={toggle_interest_menu}>
-				Add interest calc
-			</button>
-			{/if}
-			{#if interest_menu_expanded}
-				<div transition:fly="{{ y: -100, duration: 700, delay: 600 }}">
-					<input bind:value={interest_label} type=text>Label
-					<input bind:value={interest_start_date} type=number>start date
-					<input bind:value={interest_start_amount} type=number>start amount
-					<input bind:value={interest_rate} type=number>rate of growth
-					<input bind:value={interest_yearly_addition} type=number>yearly addition
-					<button on:click={createNewInterest}>Submit</button>
-				</div>
 			{/if}
 		{/if}
 	</div>
