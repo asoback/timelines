@@ -4,9 +4,18 @@
 	// import { timelineEvents }  from './store.js';
 	const dispatch = createEventDispatcher();
 
+	let time_scale = "y";
 	let expanded = false;
-	let item_name = 0;
+	let time_menu_expanded = false;
 	let event_label = '';
+
+	$: dispatch('time_label', {
+			text: time_scale
+		});
+
+	const toggle_time_menu = (e) => {
+		time_menu_expanded = !time_menu_expanded;
+	}
 
 	const toggle = () => {
 		expanded = !expanded;
@@ -61,9 +70,20 @@
 
 	<div class="container">
 		{#if expanded}
-			<button transition:fly="{{ y: -50, duration: 700 }}">
+			<button on:click={toggle_time_menu} transition:fly="{{ y: -50, duration: 700 }}">
 				Edit timescale
 			</button>
+			{#if time_menu_expanded}
+			<div >
+				<select bind:value={time_scale}>
+					<option value="y">Years</option>
+					<option value="m">Months</option>
+					<option value="w">weeks</option>
+					<option value="d">days</option>
+				</select>
+			</div>
+			{/if}
+			{#if !time_menu_expanded}
 			<input transition:fly="{{ y: -100, duration: 700 }}" on:keydown='{createNewEvent}' bind:value={event_label} placeholder="New Event Label" >
 			<button transition:fly="{{ y: -150, duration: 700 }}">
 				Add label
@@ -71,6 +91,7 @@
 			<button transition:fly="{{ y: -200, duration: 700 }}">
 				Add interest calc
 			</button>
+			{/if}
 		{/if}
 	</div>
 </div>

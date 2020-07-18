@@ -6,7 +6,7 @@
     import { draggable } from './draggable.js';
     import AddItem from './AddItem.svelte';
 
-    let timeunits = "years";
+    let timeunits = "y";
     let items = [];
 	let start_time = 2020;
 	let end_time = 2030;
@@ -40,7 +40,9 @@
         };
     }
 
-    
+    const handleUpdateTime = (e) => {
+       timeunits = e.detail.text;
+    }
 
 	function handlePanMove(event) {
         const id = event.target.dataset["eventid"];
@@ -142,7 +144,7 @@
 </style>
 
 
-<AddItem on:message={handleAddEvent}/>
+<AddItem on:message={handleAddEvent} on:time_label={handleUpdateTime}/>
 
 <div class='container'>
     <div class='timeline'> <!--use:dndzone={{items, flipDurationMs}} --> 
@@ -163,7 +165,7 @@
         <div  class='event up'>
             <div class='timestamp'>
                  {#if Number.isInteger(t)}
-                        <span>{t}</span>
+                        <span>{t}{timeunits}</span>
                  {/if}
             </div>
         </div>
