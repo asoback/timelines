@@ -55,6 +55,7 @@
 				rate: interest_rate,
 				yearly_addition: interest_yearly_addition
 		});
+		interest_menu_expanded = !interest_menu_expanded;
 	};
 	
 </script>
@@ -130,7 +131,7 @@
 					<input bind:value={interest_start_amount} type=number>start amount
 					<input bind:value={interest_rate} type=number>rate of growth
 					<input bind:value={interest_yearly_addition} type=number>yearly addition
-					<button>Submit</button>
+					<button on:click={createNewInterest}>Submit</button>
 				</div>
 			{/if}
 		{/if}

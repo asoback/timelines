@@ -9,15 +9,18 @@
     let timeunits = "y";
     let time_len = 10;
     let items = [];
-	let start_time = 2020;
-	let end_time = 2030;
+	let start_time = 0;
+	let end_time = 10;
     let absolute_time = false;
     let steps_per_unit = 4;
     let time_points = [];
     let timeline_length_px = 2000;
 
     for (let i = 0; i < (end_time - start_time) * steps_per_unit; i++){
-            time_points.push(i/4);
+            time_points[time_points.length] = {
+                time_unit: i/4,
+                interest_account: []
+            };
     }
     
     const flipDurationMs = 300;
@@ -49,16 +52,31 @@
     const handleUpdateTimeLen = (e) => {
         time_len = e.detail.text;
         if (time_points.length > time_len * 4) {
-            console.log("larger");
             time_points = time_points.slice(0, time_len * 4);
         } else {
-            console.log("smaller");
             for (let i = time_points.length; i < time_len * 4; i++) {
-                time_points[time_points.length] = time_points[time_points.length - 1] + 0.25;
+                time_points[time_points.length].time_unit = time_points[time_points.length - 1].time_unit + 0.25;
                 time_points = time_points;
             }
         }
         timeline_length_px= time_points.length * 50;
+    }
+
+    const handleNewInterest = (e) => {
+        console.log(e.detail);
+        let amount = e.detail.start_amount;
+        for (let i = e.detail.start_date; i < (end_time - start_time) * steps_per_unit; i++){
+            console.log(time_points[i])
+            amount = Math.trunc((amount + e.detail.yearly_addition) * (1 + e.detail.rate/100));
+            time_points[i].interest_account[time_points[i].interest_account.length] = {
+                label: e.detail.text,
+                amount: amount,
+                rate: e.detail.rate,
+                addition: e.detail.yearly_addition
+            }
+        };
+        time_points = time_points;
+        
     }
 
 	function handlePanMove(event) {
@@ -194,7 +212,7 @@
 </style>
 
 
-<AddItem on:message={handleAddEvent} on:time_label={handleUpdateTime} on:time_len={handleUpdateTimeLen}/>
+<AddItem on:message={handleAddEvent} on:time_label={handleUpdateTime} on:time_len={handleUpdateTimeLen} on:interest={handleNewInterest}/>
 
 <div class='container'>
     <div class='timeline' style='width: {timeline_length_px}px;'> <!--use:dndzone={{items, flipDurationMs}} --> 
@@ -211,12 +229,17 @@
                 </div>
             {/each}
         </div>
-        {#each time_points as t}
+        {#each time_points as t(t.time_unit)}
         <div  class='event up'>
             <div class='timestamp { Number.isInteger(t) === false ? 'small_label' : ''}'>
-                 {#if Number.isInteger(t)}
-                        <span>{t}{timeunits}</span>
+                 {#if Number.isInteger(t.time_unit)}
+                        <span>{t.time_unit}{timeunits}</span>
+                        {#each t.interest_account as account(account.label)}
+                            <div>{account.label}</div>
+                            <div>{account.amount}</div>
+                        {/each}
                  {/if}
+                 
             </div>
         </div>
         {/each} 
