@@ -51,14 +51,21 @@
 
     const handleUpdateTimeLen = (e) => {
         time_len = e.detail.text;
+        
         if (time_points.length > time_len * 4) {
             time_points = time_points.slice(0, time_len * 4);
         } else {
             for (let i = time_points.length; i < time_len * 4; i++) {
-                time_points[time_points.length].time_unit = time_points[time_points.length - 1].time_unit + 0.25;
+                const new_time = time_points[time_points.length - 1].time_unit + 0.25;
+                time_points.push({
+                    time_unit: new_time,
+                    interest_account: []
+                });
+                    
                 time_points = time_points;
             }
         }
+        end_time = time_len;
         timeline_length_px= time_points.length * 50;
     }
 
