@@ -92,7 +92,7 @@
 
     .content:before {
         content: '';
-        top: 60%;
+        top: 80%;
         width: 00px;
         height: 100%;
         left: 50%;
@@ -118,9 +118,10 @@
         margin: 0 auto;
         left: 0;
         right: 0;
+        bottom: 20%;
         text-align: center;
         line-height: 30px;
-        background: white;
+        background: transparent;
         transform: rotate(-45deg);
     }
 
