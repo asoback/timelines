@@ -13,10 +13,8 @@
 
 .inner-nav {
     text-align: center;
-    display: inline-block;
+    display: inline;
     position: relative;
-    width: 33%;
-    height: 100%;
     color: white;
 }
 
