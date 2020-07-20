@@ -140,11 +140,11 @@
 	<div class="main_menu">
 		{#if expanded}
 			{#if !time_menu_expanded && !interest_menu_expanded}
-			<input transition:fly="{{ y: -100, duration: 700 }}" on:keydown='{createNewEvent}' bind:value={event_label} placeholder="New Event Label" >
+			<input transition:fly="{{ y: -50, duration: 700 }}" on:keydown='{createNewEvent}' bind:value={event_label} placeholder="New Event Label" >
 			<!-- <button transition:fly="{{ y: -150, duration: 700 }}">
 				Add label
 			</button> -->
-			<button transition:fly="{{ y: -200, duration: 700 }}" on:click={toggle_interest_menu}>
+			<button transition:fly="{{ y: -50, duration: 700 }}" on:click={toggle_interest_menu}>
 				Add interest calc
 			</button>
 			{/if}

@@ -1,7 +1,7 @@
 <script>
     import { createEventDispatcher } from 'svelte';
     const dispatch = createEventDispatcher();
-    
+
     let event_label = '';
     let event_color;
     let event_id = 0;
@@ -15,10 +15,10 @@
         close_menu: menu_expanded
     });
 
-    // $: dispatch('change_element', {
-	// 	label: event_label,
-    //     color: event_color
-	// });
+    $: dispatch('change_element', {
+		label: event_label,
+        color: event_color
+	});
 
 </script>
 

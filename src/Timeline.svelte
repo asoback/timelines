@@ -23,7 +23,17 @@
     const HandleCloseMenu = (e) => {
         edit_menu_expanded = e.detail.close_menu;
     }
-    
+
+    const HandleChangeElement = (e) => {
+        if (e.detail.label != '') {
+            items[focused_event_id].label = e.detail.label;
+        }
+        if (e.detail.color != undefined) {
+             items[focused_event_id].color = e.detail.color;
+        }
+        items = items;
+    }
+
     for (let i = 0; i < (end_time - start_time) * steps_per_unit; i++){
             time_points[time_points.length] = {
                 time_unit: i/4,
@@ -49,7 +59,8 @@
         items[items.length] = {
             id: new_id,
             label: e.detail.text,
-            left_px: 100
+            left_px: 100,
+            color: "#000000"
         };
     }
 
@@ -103,10 +114,9 @@
 	}
 
     const focus_event =(e) => {
-        console.log("focus event");
-        console.log(e);
         edit_menu_expanded = true;
         focused_event_id = e.target.dataset.eventid;
+        console.log(focused_event_id);
     }
 
 </script>
@@ -262,7 +272,7 @@
                     style="transform:
                         translate({item.left_px}px, 0px)"
                     class='content {item.label === '' ? 'hidden' : ''}'>
-                    <div class="avatar" data-eventid="{item.id}">{item.label}</div>
+                    <div class="avatar" style="color: {item.color}" data-eventid="{item.id}">{item.label}</div>
                 </div>
             {/each}
         </div>
@@ -287,6 +297,6 @@
 
 {#if edit_menu_expanded}
     <div class="edit_menu">
-        <EditEvent on:close_menu={HandleCloseMenu}/>
+        <EditEvent on:close_menu={HandleCloseMenu} on:change_element={HandleChangeElement}/>
     </div>
 {/if}
