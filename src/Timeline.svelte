@@ -5,6 +5,7 @@
     import {tweened } from 'svelte/motion';
     import { draggable } from './draggable.js';
     import AddItem from './AddItem.svelte';
+    import EditEvent from './EditEvent.svelte';
 
     let timeunits = "y";
     let time_len = 10;
@@ -15,7 +16,14 @@
     let steps_per_unit = 4;
     let time_points = [];
     let timeline_length_px = 2000;
+    let edit_menu_expanded = false;
+    let focused_event_id = -1;
 
+
+    const HandleCloseMenu = (e) => {
+        edit_menu_expanded = e.detail.close_menu;
+    }
+    
     for (let i = 0; i < (end_time - start_time) * steps_per_unit; i++){
             time_points[time_points.length] = {
                 time_unit: i/4,
@@ -94,6 +102,12 @@
         items = items;
 	}
 
+    const focus_event =(e) => {
+        console.log("focus event");
+        console.log(e);
+        edit_menu_expanded = true;
+        focused_event_id = e.target.dataset.eventid;
+    }
 
 </script>
 
@@ -227,6 +241,10 @@
         color: #555555;
     }
 
+    .edit_menu {
+        display: inline-block;
+        position: relative;
+    }
 </style>
 
 
@@ -237,13 +255,14 @@
         <div class='event_space'>
             {#each items as item(item.id)}
                 <div 
+                    on:click={focus_event}
                     data-eventid="{item.id}"
                     use:draggable
                     on:panmove={handlePanMove}
                     style="transform:
                         translate({item.left_px}px, 0px)"
                     class='content {item.label === '' ? 'hidden' : ''}'>
-                    <div class="avatar">{item.label}</div>
+                    <div class="avatar" data-eventid="{item.id}">{item.label}</div>
                 </div>
             {/each}
         </div>
@@ -265,3 +284,9 @@
         {/each} 
     </div>
 </div>
+
+{#if edit_menu_expanded}
+    <div class="edit_menu">
+        <EditEvent on:close_menu={HandleCloseMenu}/>
+    </div>
+{/if}
