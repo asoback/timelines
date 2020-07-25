@@ -97,10 +97,9 @@
     }
 
     const handleNewInterest = (e) => {
-        console.log(e.detail);
         let amount = e.detail.start_amount;
-        for (let i = e.detail.start_date* steps_per_unit; i < (end_time - start_time) * steps_per_unit; i++){
-            console.log(time_points[i])
+        const calc_finish = Math.min(e.detail.end_date, end_time - start_time);
+        for (let i = e.detail.start_date* steps_per_unit; i < calc_finish * steps_per_unit; i++){
             if (i % steps_per_unit == 0 && i != e.detail.start_date* steps_per_unit) {
                 amount = Math.trunc((amount + e.detail.yearly_addition) * (1 + e.detail.rate/100));
             }
