@@ -40,7 +40,6 @@
             items[i].id = i;
         }
         items=items;
-        console.log(items)
     };
 
     for (let i = 0; i < (end_time - start_time) * steps_per_unit; i++){
@@ -118,7 +117,6 @@
 
 	function handlePanMove(event) {
         const id = event.target.dataset["eventid"];
-        console.log(id);
         items[id].left_px += event.detail.dx;
         items = items;
 	}
