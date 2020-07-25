@@ -16,6 +16,7 @@
 	let interest_start_amount = 0;
 	let interest_rate = 0;
 	let interest_yearly_addition = 0;
+	let interest_end_date = 0;
 
 	$: dispatch('time_label', {
 			text: time_scale
@@ -24,6 +25,10 @@
 	$: dispatch('time_len', {
 		text: time_len
 	});
+
+	$: if (interest_start_date > interest_end_date) {
+		interest_end_date = interest_start_date + 10;
+	}
 
 	const toggle_time_menu = (e) => {
 		time_menu_expanded = !time_menu_expanded;
@@ -57,6 +62,10 @@
 		});
 		interest_menu_expanded = !interest_menu_expanded;
 	};
+
+	const closeInterestMenu = () => {
+		interest_menu_expanded = false;
+	}
 	
 </script>
 
@@ -155,7 +164,9 @@
 					<label>start amount</label><input bind:value={interest_start_amount} type=number>
 					<label>rate of growth</label><input bind:value={interest_rate} type=number>
 					<label>yearly addition</label><input bind:value={interest_yearly_addition} type=number>
+					<label>end date</label><input bind:value={interest_end_date} type=number>
 					<button on:click={createNewInterest}><label>Submit</button>
+					<button on:click={closeInterestMenu}><label>Cancel</button>
 				</div>
 			{/if}
 			{#if !interest_menu_expanded}
