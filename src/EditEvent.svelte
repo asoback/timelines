@@ -20,6 +20,12 @@
         color: event_color
 	});
 
+    const DeleteItem = () => {
+        dispatch('remove_element', {
+            text: "remove"
+        });
+    };
+
 </script>
 
 <style>
@@ -30,5 +36,6 @@
 <div class="container menu">
         Title<input type=text bind:value={event_label}>
         <input type=color bind:value={event_color}>
+        <button on:click="{DeleteItem}">Delete</button>
         <button on:click="{CloseMenu}">close</button>
 </div>

@@ -34,6 +34,15 @@
         items = items;
     }
 
+    const HandleRemoveElement = (e) => {
+        items.splice(focused_event_id, 1);
+        for (let i = 0; i < items.length; i++) {
+            items[i].id = i;
+        }
+        items=items;
+        console.log(items)
+    };
+
     for (let i = 0; i < (end_time - start_time) * steps_per_unit; i++){
             time_points[time_points.length] = {
                 time_unit: i/4,
@@ -109,6 +118,7 @@
 
 	function handlePanMove(event) {
         const id = event.target.dataset["eventid"];
+        console.log(id);
         items[id].left_px += event.detail.dx;
         items = items;
 	}
@@ -297,6 +307,6 @@
 
 {#if edit_menu_expanded}
     <div class="edit_menu">
-        <EditEvent on:close_menu={HandleCloseMenu} on:change_element={HandleChangeElement}/>
+        <EditEvent on:close_menu={HandleCloseMenu} on:change_element={HandleChangeElement} on:remove_element={HandleRemoveElement} />
     </div>
 {/if}
