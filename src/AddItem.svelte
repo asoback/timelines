@@ -1,7 +1,6 @@
 <script>
 	import { fly } from 'svelte/transition';
 	import { createEventDispatcher } from 'svelte';
-	// import { timelineEvents }  from './store.js';
 	const dispatch = createEventDispatcher();
 
 	let time_scale = "y";
@@ -16,7 +15,7 @@
 	let interest_start_amount = 0;
 	let interest_rate = 0;
 	let interest_yearly_addition = 0;
-	let interest_end_date = 0;
+	let interest_end_date = 10;
 
 	$: dispatch('time_label', {
 			text: time_scale
@@ -176,7 +175,7 @@
 			</button>
 			{/if}
 			{#if time_menu_expanded && !interest_menu_expanded}
-			<div >
+			<div>
 				<select bind:value={time_scale}>
 					<option value="y">Years</option>
 					<option value="m">Months</option>

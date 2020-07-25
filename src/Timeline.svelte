@@ -6,6 +6,7 @@
     import { draggable } from './draggable.js';
     import AddItem from './AddItem.svelte';
     import EditEvent from './EditEvent.svelte';
+    import EditInterest from './EditInterest.svelte';
 
     let timeunits = "y";
     let time_len = 10;
@@ -18,7 +19,8 @@
     let timeline_length_px = 2000;
     let edit_menu_expanded = false;
     let focused_event_id = -1;
-
+    let interest_count = 0;
+    let focused_interest_id = -1;
 
     const HandleCloseMenu = (e) => {
         edit_menu_expanded = e.detail.close_menu;
@@ -96,6 +98,10 @@
         timeline_length_px= time_points.length * 50;
     }
 
+    const editInterest = (e) => {
+        focused_interest_id = e.target.dataset.id;
+    }
+
     const handleNewInterest = (e) => {
         let amount = e.detail.start_amount;
         const calc_finish = Math.min(e.detail.end_date, end_time - start_time);
@@ -104,6 +110,7 @@
                 amount = Math.trunc((amount + e.detail.yearly_addition) * (1 + e.detail.rate/100));
             }
             time_points[i].interest_account[time_points[i].interest_account.length] = {
+                id: interest_count,
                 label: e.detail.text,
                 amount: amount,
                 rate: e.detail.rate,
@@ -111,7 +118,7 @@
             }
         };
         time_points = time_points;
-        
+        interest_count++;
     }
 
 	function handlePanMove(event) {
@@ -190,8 +197,6 @@
         width: 30px;
         height: 30px;
         display: block;
-        /* border-radius: 50%;
-        border: 6px solid #BADA55; */
         position: absolute;
         margin: 0 auto;
         left: 0;
@@ -289,9 +294,9 @@
                  {#if Number.isInteger(t.time_unit)}
                         <span>{t.time_unit}{timeunits}</span>
                         {#each t.interest_account as account(account.label)}
-                        <div class="interest_element">
-                            <div>{account.label}</div>
-                            <div>{account.amount}</div>
+                        <div class="interest_element"  data-id="{account.id}" on:click={editInterest}>
+                            <div data-id="{account.id}" >{account.label}</div>
+                            <div data-id="{account.id}" >{account.amount}</div>
                         </div>
                         {/each}
                  {/if}
@@ -306,4 +311,8 @@
     <div class="edit_menu">
         <EditEvent on:close_menu={HandleCloseMenu} on:change_element={HandleChangeElement} on:remove_element={HandleRemoveElement} />
     </div>
+{/if}
+
+{#if focused_interest_id >= 0}
+    <EditInterest/>
 {/if}
