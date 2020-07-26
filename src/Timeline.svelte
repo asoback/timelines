@@ -133,6 +133,19 @@
         console.log(focused_event_id);
     }
 
+    const HandleDeleteInterest = (e) => {
+        console.log("delete");
+        for (let i = 0; i < (end_time - start_time) * steps_per_unit; i++){
+            for (let j = 0; j < time_points[i].interest_account.length; j++) {
+                if (time_points[i].interest_account[j].id = focused_interest_id) {
+                    time_points[i].interest_account.splice(j, 1);
+                }
+            }
+        }
+        time_points = time_points;
+        focused_interest_id =  -1;
+    };
+
 </script>
 
 <style>
@@ -314,5 +327,5 @@
 {/if}
 
 {#if focused_interest_id >= 0}
-    <EditInterest/>
+    <EditInterest on:delete_interest={HandleDeleteInterest}/>
 {/if}
