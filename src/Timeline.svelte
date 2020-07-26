@@ -162,19 +162,39 @@
 
 
     const HandleEditStartDateInterest = (e) => {
-       // e.detail.interest_start_date
+       for (let i = 0; i < (end_time - start_time) * steps_per_unit; i++){
+            for (let j = 0; j < time_points[i].interest_account.length; j++) {
+                // e.detail.interest_start_date
+            }
+        }
     }
     const HandleEditStartAmountInterest = (e) => {
-      //  e.detail.interest_start_amount
+        for (let i = 0; i < (end_time - start_time) * steps_per_unit; i++){
+            for (let j = 0; j < time_points[i].interest_account.length; j++) {
+                //  e.detail.interest_start_amount
+            }
+        }
     }
     const HandleEditRateInterest = (e) => {
-       // e.detail.interest_rate
+        for (let i = 0; i < (end_time - start_time) * steps_per_unit; i++){
+            for (let j = 0; j < time_points[i].interest_account.length; j++) {
+                // e.detail.interest_rate
+            }
+        }
     }
     const HandleEditYearlyAdditionInterest = (e) => {
-       // e.detail.interest_yearly_addition
+        for (let i = 0; i < (end_time - start_time) * steps_per_unit; i++){
+            for (let j = 0; j < time_points[i].interest_account.length; j++) {
+               // e.detail.interest_yearly_addition 
+            }
+        }
     }
     const HandleEditEndDateInterest = (e) => {
-       // e.detail.interest_end_date
+        for (let i = 0; i < (end_time - start_time) * steps_per_unit; i++){
+            for (let j = 0; j < time_points[i].interest_account.length; j++) {
+                // e.detail.interest_end_date
+            }
+        }
     }
 
 </script>
