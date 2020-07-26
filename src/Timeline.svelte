@@ -134,7 +134,6 @@
     }
 
     const HandleDeleteInterest = (e) => {
-        console.log("delete");
         for (let i = 0; i < (end_time - start_time) * steps_per_unit; i++){
             for (let j = 0; j < time_points[i].interest_account.length; j++) {
                 if (time_points[i].interest_account[j].id = focused_interest_id) {
@@ -148,6 +147,34 @@
 
     const CloseInterestMenu = (e) => {
         focused_interest_id =  -1;
+    }
+
+    const HandleEditLabelInterest = (e) => {
+         for (let i = 0; i < (end_time - start_time) * steps_per_unit; i++){
+            for (let j = 0; j < time_points[i].interest_account.length; j++) {
+                if (time_points[i].interest_account[j].id = focused_interest_id) {
+                    time_points[i].interest_account[j].label = e.detail.text;
+                }
+            }
+        }
+        time_points = time_points;
+    }
+
+
+    const HandleEditStartDateInterest = (e) => {
+       // e.detail.interest_start_date
+    }
+    const HandleEditStartAmountInterest = (e) => {
+      //  e.detail.interest_start_amount
+    }
+    const HandleEditRateInterest = (e) => {
+       // e.detail.interest_rate
+    }
+    const HandleEditYearlyAdditionInterest = (e) => {
+       // e.detail.interest_yearly_addition
+    }
+    const HandleEditEndDateInterest = (e) => {
+       // e.detail.interest_end_date
     }
 
 </script>
@@ -332,5 +359,15 @@
 {/if}
 
 {#if focused_interest_id >= 0}
-    <EditInterest on:delete_interest={HandleDeleteInterest} on:close_edit_interest_menu={CloseInterestMenu}/>
+    <EditInterest 
+        on:delete_interest={HandleDeleteInterest} 
+        on:close_edit_interest_menu={CloseInterestMenu}
+        on:interest_label={HandleEditLabelInterest}
+	    on:interest_start_date={HandleEditStartDateInterest}
+	    on:interest_start_amount={HandleEditStartAmountInterest}
+	    on:interest_rate={HandleEditRateInterest}
+	    on:interest_yearly_addition={HandleEditYearlyAdditionInterest}
+        on:interest_end_date={HandleEditEndDateInterest}
+        
+        />
 {/if}

@@ -12,8 +12,30 @@
     
     $: dispatch('interest_label', {
 		text: interest_label
-	});
+    });
+    
+    $: dispatch('interest_start_date', {
+		interest_start_date: interest_start_date
+    });
 
+    $: dispatch('interest_start_amount', {
+		interest_start_amount: interest_start_amount
+    });
+
+    $: dispatch('interest_rate', {
+		interest_rate: interest_rate
+    });
+
+    $: dispatch('interest_yearly_addition', {
+		interest_yearly_addition: interest_yearly_addition
+    });
+
+    $: if (interest_start_date > interest_end_date) {
+        interest_end_date = interest_start_date + 10;
+        dispatch('interest_end_date', {
+            interest_end_date: interest_end_date
+        });
+    };
 
     const DeleteInterest = () => {
         dispatch('delete_interest', {
@@ -49,7 +71,7 @@
 </style>
 
 <div class="interest_menu" transition:fly="{{ y: -100, duration: 700, delay: 600 }}">
-    <label>Label</label><input bind:value={interest_label} type=text>
+    <label>Label</label><input bind:value={interest_label} type=text placeholder="New Label">
     <label>start date</label><input bind:value={interest_start_date} type=number>
     <label>start amount</label><input bind:value={interest_start_amount} type=number>
     <label>rate of growth</label><input bind:value={interest_rate} type=number>
