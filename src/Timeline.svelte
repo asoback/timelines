@@ -146,6 +146,10 @@
         focused_interest_id =  -1;
     };
 
+    const CloseInterestMenu = (e) => {
+        focused_interest_id =  -1;
+    }
+
 </script>
 
 <style>
@@ -282,8 +286,9 @@
     }
 </style>
 
-
-<AddItem on:message={handleAddEvent} on:time_label={handleUpdateTime} on:time_len={handleUpdateTimeLen} on:interest={handleNewInterest}/>
+{#if focused_interest_id < 0}
+    <AddItem on:message={handleAddEvent} on:time_label={handleUpdateTime} on:time_len={handleUpdateTimeLen} on:interest={handleNewInterest}/>
+{/if}
 
 <div class='container'>
     <div class='timeline' style='width: {timeline_length_px}px;'> <!--use:dndzone={{items, flipDurationMs}} --> 
@@ -320,12 +325,12 @@
     </div>
 </div>
 
-{#if edit_menu_expanded}
+{#if edit_menu_expanded && focused_interest_id < 0}
     <div class="edit_menu">
         <EditEvent on:close_menu={HandleCloseMenu} on:change_element={HandleChangeElement} on:remove_element={HandleRemoveElement} />
     </div>
 {/if}
 
 {#if focused_interest_id >= 0}
-    <EditInterest on:delete_interest={HandleDeleteInterest}/>
+    <EditInterest on:delete_interest={HandleDeleteInterest} on:close_edit_interest_menu={CloseInterestMenu}/>
 {/if}

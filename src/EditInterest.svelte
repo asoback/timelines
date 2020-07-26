@@ -29,7 +29,24 @@
 
 </script>
 
+<style>
+    .interest_menu {
+        display: inline-block;
+        position: relative;
+        width: 100%;
+    }
 
+    label {
+        display: inline;
+        position: relative;
+    }
+
+    input {
+        display: inline;
+        position: relative;
+    }
+
+</style>
 
 <div class="interest_menu" transition:fly="{{ y: -100, duration: 700, delay: 600 }}">
     <label>Label</label><input bind:value={interest_label} type=text>
