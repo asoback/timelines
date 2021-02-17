@@ -2,46 +2,12 @@
     // import { spring } from 'svelte/motion';
     // import { flip } from 'svelte/animate';
     // import { dndzone } from 'svelte-dnd-action';
-    import {tweened } from 'svelte/motion';
+    import { tweened } from 'svelte/motion';
     import { draggable } from './draggable.js';
     import AddItem from './AddItem.svelte';
     import EditEvent from './EditEvent.svelte';
 
-    let timeunits = "y";
-    let time_len = 10;
-    let items = [];
-	let start_time = 0;
-	let end_time = 10;
-    let absolute_time = false;
-    let steps_per_unit = 4;
-    let time_points = [];
-    let timeline_length_px = 2000;
-    let edit_menu_expanded = false;
-    let focused_event_id = -1;
-
-
-    const HandleCloseMenu = (e) => {
-        edit_menu_expanded = e.detail.close_menu;
-    }
-
-    const HandleChangeElement = (e) => {
-        if (e.detail.label != '') {
-            items[focused_event_id].label = e.detail.label;
-        }
-        if (e.detail.color != undefined) {
-             items[focused_event_id].color = e.detail.color;
-        }
-        items = items;
-    }
-
-    for (let i = 0; i < (end_time - start_time) * steps_per_unit; i++){
-            time_points[time_points.length] = {
-                time_unit: i/4,
-                interest_account: []
-            };
-    }
-    
-    const flipDurationMs = 300;
+    let today_px = 0;
 
     function handleSort(e) {
         items = e.detail.items;
@@ -60,6 +26,7 @@
             id: new_id,
             label: e.detail.text,
             left_px: 100,
+            date: convert_place_to_date(100),
             color: "#000000"
         };
     }
@@ -86,6 +53,8 @@
         }
         end_time = time_len;
         timeline_length_px= time_points.length * 50;
+        today_px = get_today_in_px();
+        yesterday_px = Math.max(today_px - 30, 0);
     }
 
     const handleNewInterest = (e) => {
@@ -110,6 +79,7 @@
 	function handlePanMove(event) {
         const id = event.target.dataset["eventid"];
         items[id].left_px += event.detail.dx;
+        items[id].date = convert_place_to_date(items[id].left_px);
         items = items;
 	}
 
@@ -119,6 +89,70 @@
         console.log(focused_event_id);
     }
 
+    const convert_place_to_date = (px) => {
+        const total_days = time_len * 365; // days in a year
+        const fraction_per_day = 1/total_days;
+        const fraction_at_px = px/timeline_length_px;
+        const number_of_days_since_start = fraction_at_px / fraction_per_day;
+        const milli_since_start = number_of_days_since_start * 24 * 60 * 60 * 1000;
+        const new_time = new Date(Date.now() + milli_since_start);
+        return new_time.toString();
+    }
+
+    const get_today_in_px = () => {
+        const current_time = new Date(Date.now());
+
+        const month = current_time.getMonth();
+        const day = current_time.getDate();
+        const days_ahead = month * 30 + day; // TODO (close enough)
+
+        const total_days = time_len * 365; // days in a year
+        const fraction = days_ahead/total_days;
+
+        return Math.floor(timeline_length_px * fraction);
+    }
+
+    const HandleCloseMenu = (e) => {
+        edit_menu_expanded = e.detail.close_menu;
+    }
+
+    const HandleChangeElement = (e) => {
+        if (e.detail.label != '') {
+            items[focused_event_id].label = e.detail.label;
+        }
+        if (e.detail.color != undefined) {
+             items[focused_event_id].color = e.detail.color;
+        }
+        items = items;
+    }
+
+    let timeunits = "y";
+    let time_len = 5;
+    let items = [];
+	let start_time = 0;
+	let end_time = 5;
+    let absolute_time = false;
+    let steps_per_unit = 4; // tick marks
+    let time_points = [];
+    let timeline_length_px = 75*20;
+    let edit_menu_expanded = false;
+    let focused_event_id = -1;
+    today_px = get_today_in_px();
+    console.log(today_px);
+    let yesterday_px = Math.max(today_px - 30, 0);
+
+
+    for (let i = 0; i < (end_time - start_time) * steps_per_unit; i++){
+            time_points[time_points.length] = {
+                time_unit: i/4,
+                interest_account: []
+            };
+    }
+    
+    const flipDurationMs = 300;
+
+    
+    
 </script>
 
 <style>
@@ -137,7 +171,7 @@
 
     .timeline {
         position: absolute;
-        width: 2000px; /* TODO */
+        width: 100%; /* TODO */
         height: 200px;
         margin: 0 0;
         margin-bottom: 10px;
@@ -149,7 +183,7 @@
         display: inline-block;
         position: relative;
         height: 60%;
-        width: 50px;
+        width: 75px;
         top: 100%;
     }
  
@@ -218,8 +252,10 @@
     .event_space {
         display :inline-block;
         position: absolute;
-        height:100%;
+        height: 100%;
         width:100%;
+        
+        background-image: linear-gradient(to right,rgb(165, 165, 165) var(--yesterday-px), rgba(0,0,0,0) var(--today-px));
     }
 
     .small_label {
@@ -257,41 +293,42 @@
     }
 </style>
 
+<div class='timeline_full_container'>
+    <AddItem on:message={handleAddEvent} on:time_label={handleUpdateTime} on:time_len={handleUpdateTimeLen} on:interest={handleNewInterest}/>
 
-<AddItem on:message={handleAddEvent} on:time_label={handleUpdateTime} on:time_len={handleUpdateTimeLen} on:interest={handleNewInterest}/>
-
-<div class='container'>
-    <div class='timeline' style='width: {timeline_length_px}px;'> <!--use:dndzone={{items, flipDurationMs}} --> 
-        <div class='event_space'>
-            {#each items as item(item.id)}
-                <div 
-                    on:click={focus_event}
-                    data-eventid="{item.id}"
-                    use:draggable
-                    on:panmove={handlePanMove}
-                    style="transform:
-                        translate({item.left_px}px, 0px)"
-                    class='content {item.label === '' ? 'hidden' : ''}'>
-                    <div class="avatar" style="color: {item.color}" data-eventid="{item.id}">{item.label}</div>
-                </div>
-            {/each}
-        </div>
-        {#each time_points as t(t.time_unit)}
-        <div  class='event up'>
-            <div class='timestamp { Number.isInteger(t) === false ? 'small_label' : ''}'>
-                 {#if Number.isInteger(t.time_unit)}
-                        <span>{t.time_unit}{timeunits}</span>
-                        {#each t.interest_account as account(account.label)}
-                        <div class="interest_element">
-                            <div>{account.label}</div>
-                            <div>{account.amount}</div>
-                        </div>
-                        {/each}
-                 {/if}
-                 
+    <div class='container'>
+        <div class='timeline' style='width: {timeline_length_px}px;'> <!--use:dndzone={{items, flipDurationMs}} --> 
+            <div class='event_space' style="--today-px: {today_px}px; --yesterday-px: {yesterday_px}px;">
+                {#each items as item(item.id)}
+                    <div 
+                        on:click={focus_event}
+                        data-eventid="{item.id}"
+                        use:draggable
+                        on:panmove={handlePanMove}
+                        style="transform:
+                            translate({item.left_px}px, 0px)"
+                        class='content {item.label === '' ? 'hidden' : ''}'>
+                        <div class="avatar" style="color: {item.color}" data-eventid="{item.id}">{item.label}</div>
+                    </div>
+                {/each}
             </div>
+            {#each time_points as t(t.time_unit)}
+            <div  class='event up'>
+                <div class='timestamp { Number.isInteger(t) === false ? 'small_label' : ''}'>
+                    {#if Number.isInteger(t.time_unit)}
+                            <span>{t.time_unit}{timeunits}</span>
+                            {#each t.interest_account as account(account.label)}
+                            <div class="interest_element">
+                                <div>{account.label}</div>
+                                <div>{account.amount}</div>
+                            </div>
+                            {/each}
+                    {/if}
+                    
+                </div>
+            </div>
+            {/each} 
         </div>
-        {/each} 
     </div>
 </div>
 
