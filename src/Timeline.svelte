@@ -8,6 +8,40 @@
     import EditEvent from './EditEvent.svelte';
 
     let today_px = 0;
+    let edit_menu_expanded = false;
+    let focused_event_id = -1;
+
+
+    const HandleCloseMenu = (e) => {
+        edit_menu_expanded = e.detail.close_menu;
+    }
+
+    const HandleChangeElement = (e) => {
+        if (e.detail.label != '') {
+            items[focused_event_id].label = e.detail.label;
+        }
+        if (e.detail.color != undefined) {
+             items[focused_event_id].color = e.detail.color;
+        }
+        items = items;
+    }
+
+    const HandleRemoveElement = (e) => {
+        items.splice(focused_event_id, 1);
+        for (let i = 0; i < items.length; i++) {
+            items[i].id = i;
+        }
+        items=items;
+    };
+
+    for (let i = 0; i < (end_time - start_time) * steps_per_unit; i++){
+            time_points[time_points.length] = {
+                time_unit: i/4,
+                interest_account: []
+            };
+    }
+    
+    const flipDurationMs = 300;
 
     function handleSort(e) {
         items = e.detail.items;
@@ -334,6 +368,6 @@
 
 {#if edit_menu_expanded}
     <div class="edit_menu">
-        <EditEvent on:close_menu={HandleCloseMenu} on:change_element={HandleChangeElement}/>
+        <EditEvent on:close_menu={HandleCloseMenu} on:change_element={HandleChangeElement} on:remove_element={HandleRemoveElement} />
     </div>
 {/if}
