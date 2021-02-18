@@ -84,9 +84,9 @@
 	
 	.container {
 		display: flexbox;
-		position: relative;
-		float: right;
-		top: 5;
+		position: absolute;
+		right: 5%;
+		top: 5%;
 		margin-top: 3px;
 	}
 

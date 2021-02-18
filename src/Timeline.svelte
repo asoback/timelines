@@ -391,68 +391,74 @@
     display: inline-block;
     position: relative;
   }
+
+  .timeline_full_container {
+    
+  }
 </style>
 
-{#if focused_interest_id < 0}
-  <AddItem on:message={handleAddEvent} on:time_label={handleUpdateTime} on:time_len={handleUpdateTimeLen} on:interest={handleNewInterest}/>
-{/if}
+
                  
 <div class='timeline_full_container'>
-    <div class='container'>
-        <div class='timeline' style='width: {timeline_length_px}px;'> <!--use:dndzone={{items, flipDurationMs}} --> 
-            <div class='event_space' style="--today-px: {today_px}px; --yesterday-px: {yesterday_px}px;">
-                {#each items as item(item.id)}
-                    <div 
-                        on:click={focus_event}
-                        data-eventid="{item.id}"
-                        use:draggable
-                        on:panmove={handlePanMove}
-                        on:panend={handlePanEnd}
-                        style="transform:
-                            translate({item.left_px}px, 0px)"
-                        class='content {item.label === '' ? 'hidden' : ''}'>
-                        <div class="avatar" style="color: {item.color}" data-eventid="{item.id}">{item.label}</div>
-                    </div>
-                {/each}
-            </div>
-            {#each time_points as t(t.time_unit)}
-            <div  class='event up'>
-                <div class='timestamp { Number.isInteger(t) === false ? 'small_label' : ''}'>
-                    {#if Number.isInteger(t.time_unit)}
-                            <span>{t.time_unit}{timeunits}</span>
-                            {#each t.interest_account as account(account.label)}
-                            <div class="interest_element"  data-id="{account.id}" on:click={editInterest}>
-                                <div data-id="{account.id}" >{account.label}</div>
-                                <div data-id="{account.id}" >{account.amount}</div>
-                            </div>
-                            {/each}
-                    {/if}
-                    
-                </div>
-            </div>
-            {/each} 
-        </div>
-        <div class="date_display">
-          <span>{date_display}</span>
-        </div>
-    </div>
-</div>
+  {#if focused_interest_id < 0}
+    <AddItem on:message={handleAddEvent} on:time_label={handleUpdateTime} on:time_len={handleUpdateTimeLen} on:interest={handleNewInterest}/>
+  {/if}
 
-{#if edit_menu_expanded && focused_interest_id < 0}
-  <div class="edit_menu">
-    <EditEvent on:close_menu={HandleCloseMenu} on:change_element={HandleChangeElement} on:remove_element={HandleRemoveElement} />
+  <div class='container'>
+      <div class='timeline' style='width: {timeline_length_px}px;'> <!--use:dndzone={{items, flipDurationMs}} --> 
+          <div class='event_space' style="--today-px: {today_px}px; --yesterday-px: {yesterday_px}px;">
+              {#each items as item(item.id)}
+                  <div 
+                      on:click={focus_event}
+                      data-eventid="{item.id}"
+                      use:draggable
+                      on:panmove={handlePanMove}
+                      on:panend={handlePanEnd}
+                      style="transform:
+                          translate({item.left_px}px, 0px)"
+                      class='content {item.label === '' ? 'hidden' : ''}'>
+                      <div class="avatar" style="color: {item.color}" data-eventid="{item.id}">{item.label}</div>
+                  </div>
+              {/each}
+          </div>
+          {#each time_points as t(t.time_unit)}
+          <div  class='event up'>
+              <div class='timestamp { Number.isInteger(t) === false ? 'small_label' : ''}'>
+                  {#if Number.isInteger(t.time_unit)}
+                          <span>{t.time_unit}{timeunits}</span>
+                          {#each t.interest_account as account(account.label)}
+                          <div class="interest_element"  data-id="{account.id}" on:click={editInterest}>
+                              <div data-id="{account.id}" >{account.label}</div>
+                              <div data-id="{account.id}" >{account.amount}</div>
+                          </div>
+                          {/each}
+                  {/if}
+                  
+              </div>
+          </div>
+          {/each} 
+      </div>
+      <div class="date_display">
+        <span>{date_display}</span>
+      </div>
   </div>
-{/if}
 
-{#if focused_interest_id >= 0}
-  <EditInterest 
-    on:delete_interest={HandleDeleteInterest} 
-    on:close_edit_interest_menu={CloseInterestMenu}
-    on:interest_label={HandleEditLabelInterest}
-    on:interest_start_date={HandleEditStartDateInterest}
-    on:interest_start_amount={HandleEditStartAmountInterest}
-    on:interest_rate={HandleEditRateInterest}
-    on:interest_yearly_addition={HandleEditYearlyAdditionInterest}
-    on:interest_end_date={HandleEditEndDateInterest}
-  />
-{/if}
+  {#if edit_menu_expanded && focused_interest_id < 0}
+    <div class="edit_menu">
+      <EditEvent on:close_menu={HandleCloseMenu} on:change_element={HandleChangeElement} on:remove_element={HandleRemoveElement} />
+    </div>
+  {/if}
+
+  {#if focused_interest_id >= 0}
+    <EditInterest 
+      on:delete_interest={HandleDeleteInterest} 
+      on:close_edit_interest_menu={CloseInterestMenu}
+      on:interest_label={HandleEditLabelInterest}
+      on:interest_start_date={HandleEditStartDateInterest}
+      on:interest_start_amount={HandleEditStartAmountInterest}
+      on:interest_rate={HandleEditRateInterest}
+      on:interest_yearly_addition={HandleEditYearlyAdditionInterest}
+      on:interest_end_date={HandleEditEndDateInterest}
+    />
+  {/if}
+</div>
