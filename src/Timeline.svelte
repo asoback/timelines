@@ -25,6 +25,7 @@
   let focused_interest_id = -1;
   // Menu
   let edit_menu_expanded = false;
+  let date_display = "";
 
   // Functions section
 
@@ -45,18 +46,25 @@
     items[items.length] = {
       id: new_id,
       label: e.detail.text,
-      left_px: 100,
-      date: convert_place_to_date(100),
+      left_px: 0,
+      date: convert_place_to_date(0),
       color: "#000000"
     };
   }
 
   function handlePanMove(event) {
     const id = event.target.dataset["eventid"];
+    const element_width = getComputedStyle(event.target).width.replace(/\D+/g, '');
     items[id].left_px += event.detail.dx;
-    items[id].date = convert_place_to_date(items[id].left_px);
+    console.log(items[id].left_px, items[id].left_px - (element_width/2));
+    items[id].date = convert_place_to_date(items[id].left_px - (element_width/2));
     items = items;
+    date_display = items[id].date;
 	}
+
+  function handlePanEnd(event) {
+    date_display = "";
+  }
 
   const focus_event =(e) => {
     edit_menu_expanded = true;
@@ -118,13 +126,18 @@
   }
 
   const convert_place_to_date = (px) => {
+    console.log(px);
     const total_days = time_len * 365; // days in a year
     const fraction_per_day = 1/total_days;
     const fraction_at_px = px/timeline_length_px;
     const number_of_days_since_start = fraction_at_px / fraction_per_day;
     const milli_since_start = number_of_days_since_start * 24 * 60 * 60 * 1000;
     const new_time = new Date(Date.now() + milli_since_start);
-    return new_time.toString();
+    let options = {month: 'long'};
+    const output_month = new Intl.DateTimeFormat('en-US', options).format(new_time);
+    const output_date = new_time.getDate();
+    const output_year = new_time.getFullYear();
+    return `${output_month}, ${output_date} ${output_year}`;
   }
 
   // Interest functions
@@ -310,6 +323,13 @@
     transform: rotate(-45deg);
   }
 
+  .date_display {
+    position: absolute;
+    left: 30%;
+    bottom: 0%;
+    z-index: 1000;
+  }
+
   .timestamp {
     display: inline-block;
     position: absolute;
@@ -387,6 +407,7 @@
                         data-eventid="{item.id}"
                         use:draggable
                         on:panmove={handlePanMove}
+                        on:panend={handlePanEnd}
                         style="transform:
                             translate({item.left_px}px, 0px)"
                         class='content {item.label === '' ? 'hidden' : ''}'>
@@ -410,6 +431,9 @@
                 </div>
             </div>
             {/each} 
+        </div>
+        <div class="date_display">
+          <span>{date_display}</span>
         </div>
     </div>
 </div>
