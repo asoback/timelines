@@ -1,47 +1,49 @@
 export function draggable(node) {
-	let x;
-	let y;
+  let x;
+  let y;
 
-	function handleMousedown(event) {
-		x = event.clientX;
-		y = event.clientY;
+  function handleMousemove(event) {
+    const dx = event.clientX - x;
+    const dy = event.clientY - y;
+    x = event.clientX;
+    y = event.clientY;
 
-		node.dispatchEvent(new CustomEvent('panstart', {
-			detail: { x, y }
-		}));
+    node.dispatchEvent(new CustomEvent('panmove', {
+      detail: {
+        x, y, dx, dy
+      }
+    }));
+  }
 
-		window.addEventListener('mousemove', handleMousemove);
-		window.addEventListener('mouseup', handleMouseup);
-	}
+  function handleMouseup(event) {
+    x = event.clientX;
+    y = event.clientY;
 
-	function handleMousemove(event) {
-		const dx = event.clientX - x;
-		const dy = event.clientY - y;
-		x = event.clientX;
-		y = event.clientY;
+    node.dispatchEvent(new CustomEvent('panend', {
+      detail: { x, y }
+    }));
 
-		node.dispatchEvent(new CustomEvent('panmove', {
-			detail: { x, y, dx, dy }
-		}));
-	}
+    window.removeEventListener('mousemove', handleMousemove);
+    window.removeEventListener('mouseup', handleMouseup);
+  }
 
-	function handleMouseup(event) {
-		x = event.clientX;
-		y = event.clientY;
+  function handleMousedown(event) {
+    x = event.clientX;
+    y = event.clientY;
 
-		node.dispatchEvent(new CustomEvent('panend', {
-			detail: { x, y }
-		}));
+    node.dispatchEvent(new CustomEvent('panstart', {
+      detail: { x, y }
+    }));
 
-		window.removeEventListener('mousemove', handleMousemove);
-		window.removeEventListener('mouseup', handleMouseup);
-	}
+    window.addEventListener('mousemove', handleMousemove);
+    window.addEventListener('mouseup', handleMouseup);
+  }
 
-	node.addEventListener('mousedown', handleMousedown);
+  node.addEventListener('mousedown', handleMousedown);
 
-	return {
-		destroy() {
-			node.removeEventListener('mousedown', handleMousedown);
-		}
-	};
+  return {
+    destroy() {
+      node.removeEventListener('mousedown', handleMousedown);
+    }
+  };
 }

@@ -2,7 +2,7 @@
 
 <script>
 	import Navbar from './navbar.svelte';
-	import Timeline from './Timeline.svelte';;
+	import Timeline from './Timeline.svelte';
 </script>
 
 <style>

@@ -53,12 +53,12 @@
 
 	const createNewInterest = (e) => {
 		dispatch('interest', {
-				text: interest_label,
-				start_date: interest_start_date,
-				start_amount: interest_start_amount,
-				rate: interest_rate,
-				yearly_addition: interest_yearly_addition,
-				end_date: interest_end_date
+			text: interest_label,
+			start_date: interest_start_date,
+			start_amount: interest_start_amount,
+			rate: interest_rate,
+			yearly_addition: interest_yearly_addition,
+			end_date: interest_end_date
 		});
 		interest_menu_expanded = !interest_menu_expanded;
 	};
@@ -88,12 +88,6 @@
 		float: right;
 		top: 5;
 		margin-top: 3px;
-		/*
-		display: grid;
-		 width: 15%;
-		grid-template-columns:5em;
-		grid-template-rows: 5em;
-		grid-gap: 0.5em */
 	}
 
 	.main_menu {
