@@ -8,7 +8,7 @@
 	let interest_start_amount = 0;
 	let interest_rate = 0;
 	let interest_yearly_addition = 0;
-  let interest_end_date = 10;
+  let interest_end_date = 100;
   
   $: dispatch('interest_label', {
     text: interest_label
@@ -74,7 +74,7 @@
   <label>start amount</label><input bind:value={interest_start_amount} type=number>
   <label>rate of growth</label><input bind:value={interest_rate} type=number>
   <label>yearly addition</label><input bind:value={interest_yearly_addition} type=number>
-  <label>end date</label><input bind:value={interest_end_date} type=number>
+  <!-- <label>end date</label><input bind:value={interest_end_date} type=number> -->
   <button on:click={DeleteInterest}><label>Delete</label></button>
   <button on:click={closeInterestMenu}><label>Close</label></button>
 </div>

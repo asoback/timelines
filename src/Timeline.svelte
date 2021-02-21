@@ -11,9 +11,9 @@
   let yesterday_px = 0;
   // Timeline
   let timeunits = "y";
-  let time_len = 5;
+  let time_len = 5.25;
 	let start_time = 0;
-	let end_time = 5;
+	let end_time = 5.25;
   let steps_per_unit = 4; // tick marks
   let timeline_length_px = 75*20;
   let time_points = [];
@@ -128,7 +128,6 @@
   }
 
   const convert_place_to_date = (px) => {
-    console.log(px);
     const total_days = time_len * 365; // days in a year
     const fraction_per_day = 1/total_days;
     const fraction_at_px = px/timeline_length_px;
@@ -150,20 +149,22 @@
   const handleNewInterest = (e) => {
     let amount = e.detail.start_amount;
     const calc_finish = Math.min(e.detail.end_date, end_time - start_time);
+    const idx = interest_count;
     for (let i = e.detail.start_date* steps_per_unit; i < calc_finish * steps_per_unit; i++){
       if (i % steps_per_unit == 0 && i != e.detail.start_date* steps_per_unit) {
         amount = Math.trunc((amount + e.detail.yearly_addition) * (1 + e.detail.rate/100));
       }
-      time_points[i].interest_account[time_points[i].interest_account.length] = {
-        id: interest_count,
+      time_points[i].interest_account[idx] = {
+        id: idx,
         label: e.detail.text,
         amount: amount,
         rate: e.detail.rate,
-        addition: e.detail.yearly_addition
+        addition: e.detail.yearly_addition,
+        start_amount:  e.detail.start_amount
       }
     };
-    time_points = time_points;
     interest_count++;
+    time_points = time_points;
   }
 
   const HandleDeleteInterest = (e) => {
@@ -194,10 +195,23 @@
   }
 
   const HandleEditStartDateInterest = (e) => {
-    for (let i = 0; i < (end_time - start_time) * steps_per_unit; i++){
-      for (let j = 0; j < time_points[i].interest_account.length; j++) {
-        // TODO
-        // e.detail.interest_start_date
+    let start = false;
+    let amount = 0;
+    for (let i = 0; i < (end_time - start_time) * steps_per_unit; i++) {
+      if (i % steps_per_unit == 0) {
+        if (i/steps_per_unit < e.detail.interest_start_date) {
+          time_points[i].interest_account[focused_interest_id].amount = 0.0;
+        } else if (!start) {
+          amount = time_points[i].interest_account[focused_interest_id].start_amount;
+          time_points[i].interest_account[focused_interest_id].amount = amount;
+          start = true;
+        } else {
+          time_points[i].interest_account[focused_interest_id].amount =
+            Math.trunc(
+              (amount *  (1 + time_points[i].interest_account[focused_interest_id].rate/100)) +
+              time_points[i].interest_account[focused_interest_id].addition);
+          amount = time_points[i].interest_account[focused_interest_id].amount;
+        }
       }
     }
   }
