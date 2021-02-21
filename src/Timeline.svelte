@@ -28,6 +28,8 @@
   // Menu
   let edit_menu_expanded = false;
   let date_display = "";
+  let new_date = new Date();
+  const current_year_label = new_date.getFullYear();
 
   // Functions section
 
@@ -502,7 +504,7 @@
           <div  class='event up'>
               <div class='timestamp { Number.isInteger(t) === false ? 'small_label' : ''}'>
                   {#if Number.isInteger(t.time_unit)}
-                          <span>{t.time_unit}{timeunits}</span>
+                          <span>{t.time_unit + current_year_label}</span>
                           {#each t.interest_account as account(account.label)}
                           <div class="interest_element"  data-id="{account.id}" on:click={editInterest}>
                               <div data-id="{account.id}" >{account.label}</div>
