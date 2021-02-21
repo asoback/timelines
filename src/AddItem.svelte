@@ -39,6 +39,10 @@
 
 	const toggle = () => {
 		expanded = !expanded;
+    if (!expanded) {
+      time_menu_expanded = false;
+      interest_menu_expanded = false;
+    }
 	}
 	
 	const createNewEvent = (e) => {

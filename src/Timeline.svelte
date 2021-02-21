@@ -71,7 +71,7 @@
     focused_event_id = e.target.dataset.eventid;
   }
 
-    const HandleCloseMenu = (e) => {
+  const HandleCloseMenu = (e) => {
     edit_menu_expanded = e.detail.close_menu;
   }
 
@@ -405,7 +405,7 @@
   {/if}
 
   <div class='container'>
-      <div class='timeline' style='width: {timeline_length_px}px;'> <!--use:dndzone={{items, flipDurationMs}} --> 
+      <div class='timeline' style='width: {timeline_length_px}px;'>
           <div class='event_space' style="--today-px: {today_px}px; --yesterday-px: {yesterday_px}px;">
               {#each items as item(item.id)}
                   <div 
