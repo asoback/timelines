@@ -4,7 +4,7 @@
 	const dispatch = createEventDispatcher();
 
 	let time_scale = "y";
-	let expanded = false;
+	let expanded = true;
 	let time_menu_expanded = false;
 	let event_label = '';
 	let time_len = 10;
@@ -48,6 +48,8 @@
 	const createNewEvent = (e) => {
 		if (e.key === "Enter") {
 			expanded = false;
+      time_menu_expanded = false;
+      interest_menu_expanded = false;
 			dispatch('message', {
 				text: event_label
 			});

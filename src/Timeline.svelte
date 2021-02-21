@@ -50,13 +50,15 @@
       date: convert_place_to_date(0),
       color: "#000000"
     };
+    focused_interest_id = -1;
+    focused_event_id = new_id;
+    edit_menu_expanded = true;
   }
 
   function handlePanMove(event) {
     const id = event.target.dataset["eventid"];
     const element_width = getComputedStyle(event.target).width.replace(/\D+/g, '');
     items[id].left_px += event.detail.dx;
-    console.log(items[id].left_px, items[id].left_px - (element_width/2));
     items[id].date = convert_place_to_date(items[id].left_px - (element_width/2));
     items = items;
     date_display = items[id].date;
