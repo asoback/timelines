@@ -267,19 +267,37 @@
   }
 
   const HandleEditYearlyAdditionInterest = (e) => {
-    for (let i = 0; i < (end_time - start_time) * steps_per_unit; i++){
-      for (let j = 0; j < time_points[i].interest_account.length; j++) {
-        // TODO
-        // e.detail.interest_yearly_addition 
+    let start = false;
+    let amount = 0;
+    for (let i = 0; i < (end_time - start_time) * steps_per_unit; i++) {
+      if (i % steps_per_unit == 0) {
+        if (i/steps_per_unit < time_points[i].interest_account[focused_interest_id].start_date) {
+          time_points[i].interest_account[focused_interest_id].amount = 0.0;
+        } else if (!start) {
+          amount = time_points[i].interest_account[focused_interest_id].start_amount;
+          time_points[i].interest_account[focused_interest_id].amount = amount;
+          start = true;
+        } else {
+          time_points[i].interest_account[focused_interest_id].amount =
+            Math.trunc(
+              (amount *  (1 + time_points[i].interest_account[focused_interest_id].rate/100)) +
+              e.detail.interest_yearly_addition);
+          amount = time_points[i].interest_account[focused_interest_id].amount;
+        }
+         time_points[i].interest_account[focused_interest_id].yearly_addition =
+          e.detail.interest_yearly_addition;
       }
     }
   }
   
   const HandleEditEndDateInterest = (e) => {
-    for (let i = 0; i < (end_time - start_time) * steps_per_unit; i++){
-      for (let j = 0; j < time_points[i].interest_account.length; j++) {
-        // TODO
-        // e.detail.interest_end_date
+    // TODO, nothing saves the other changes from overwriting this.
+    // Not finished as this feature is currently hidden. Is it useful?
+    for (let i = 0; i < (end_time - start_time) * steps_per_unit; i++) {
+      if (i % steps_per_unit == 0) {
+        if (i/steps_per_unit > e.detail.interest_end_date) {
+          time_points[i].interest_account[focused_interest_id].amount = 0.0;
+        } 
       }
     }
   }
