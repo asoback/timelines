@@ -7,7 +7,7 @@
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: blueviolet;
+    background-color: red;
     color: white;
 }
 
@@ -28,7 +28,7 @@ h2 {
     <div class="inner-nav">
     </div>
     <div class="inner-nav">
-        <h2>Timeline WebApp</h2>
+        <h2>Five Year Plan</h2>
     </div>
     <div class="inner-nav">
     </div>

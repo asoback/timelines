@@ -160,6 +160,7 @@
 				Add interest calc
 			</button>
 			{/if}
+
 			{#if interest_menu_expanded}
 				<div class="interest_menu" transition:fly="{{ y: -100, duration: 700, delay: 600 }}">
 					<label>Label</label><input bind:value={interest_label} type=text>
@@ -172,11 +173,13 @@
 					<button on:click={closeInterestMenu}><label>Cancel</button>
 				</div>
 			{/if}
+
 			{#if !interest_menu_expanded}
 			<button on:click={toggle_time_menu} transition:fly="{{ y: -50, duration: 700 }}">
 				Edit timescale
 			</button>
 			{/if}
+
 			{#if time_menu_expanded && !interest_menu_expanded}
 			<div>
 				<select bind:value={time_scale}>
