@@ -2,9 +2,8 @@
   import { createEventDispatcher } from 'svelte';
   const dispatch = createEventDispatcher();
 
-  let event_label = '';
-  let event_color;
-  let event_id = 0;
+  export let event_label;
+  export let event_color;
   let menu_expanded = false;
 
   const CloseMenu = () => {

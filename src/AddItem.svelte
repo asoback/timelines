@@ -50,6 +50,9 @@
 			expanded = false;
       time_menu_expanded = false;
       interest_menu_expanded = false;
+      if (event_label == '') {
+        event_label = ' ';
+      }
 			dispatch('message', {
 				text: event_label
 			});

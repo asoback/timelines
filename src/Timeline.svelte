@@ -20,6 +20,8 @@
   // Events
   let items = [];
   let focused_event_id = -1;
+  let focused_event_label = "";
+  let focused_event_color; 
   // Interest  
   let interest_count = 0;
   let focused_interest_id = -1;
@@ -53,6 +55,8 @@
     focused_interest_id = -1;
     focused_event_id = new_id;
     edit_menu_expanded = true;
+    focused_event_label = items[focused_event_id].label;
+    focused_event_color = items[focused_event_id].color;
   }
 
   function handlePanMove(event) {
@@ -71,6 +75,8 @@
   const focus_event =(e) => {
     edit_menu_expanded = true;
     focused_event_id = e.target.dataset.eventid;
+    focused_event_label = items[focused_event_id].label;
+    focused_event_color = items[focused_event_id].color;
   }
 
   const HandleCloseMenu = (e) => {
@@ -468,7 +474,11 @@
                  
 <div class='timeline_full_container'>
   {#if focused_interest_id < 0}
-    <AddItem on:message={handleAddEvent} on:time_label={handleUpdateTime} on:time_len={handleUpdateTimeLen} on:interest={handleNewInterest}/>
+    <AddItem
+      on:message={handleAddEvent}
+      on:time_label={handleUpdateTime}
+      on:time_len={handleUpdateTimeLen}
+      on:interest={handleNewInterest}/>
   {/if}
 
   <div class='container'>
@@ -512,7 +522,12 @@
 
   {#if edit_menu_expanded && focused_interest_id < 0}
     <div class="edit_menu">
-      <EditEvent on:close_menu={HandleCloseMenu} on:change_element={HandleChangeElement} on:remove_element={HandleRemoveElement} />
+      <EditEvent
+        event_label={focused_event_label}
+        event_color={focused_event_color}
+        on:close_menu={HandleCloseMenu}
+        on:change_element={HandleChangeElement}
+        on:remove_element={HandleRemoveElement} />
     </div>
   {/if}
 
