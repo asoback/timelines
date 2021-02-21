@@ -160,7 +160,8 @@
         amount: amount,
         rate: e.detail.rate,
         addition: e.detail.yearly_addition,
-        start_amount:  e.detail.start_amount
+        start_amount:  e.detail.start_amount,
+        start_date: e.detail.start_date
       }
     };
     interest_count++;
@@ -260,7 +261,7 @@
               time_points[i].interest_account[focused_interest_id].addition);
           amount = time_points[i].interest_account[focused_interest_id].amount;
         }
-         time_points[i].interest_account[focused_interest_id].interest_rate =
+         time_points[i].interest_account[focused_interest_id].rate =
           e.detail.interest_rate;
       }
     }
@@ -284,7 +285,7 @@
               e.detail.interest_yearly_addition);
           amount = time_points[i].interest_account[focused_interest_id].amount;
         }
-         time_points[i].interest_account[focused_interest_id].yearly_addition =
+         time_points[i].interest_account[focused_interest_id].addition =
           e.detail.interest_yearly_addition;
       }
     }
@@ -516,7 +517,12 @@
   {/if}
 
   {#if focused_interest_id >= 0}
-    <EditInterest 
+    <EditInterest
+      interest_label={time_points[0].interest_account[focused_interest_id].label}
+      interest_start_date={time_points[0].interest_account[focused_interest_id].start_date}
+      interest_start_amount={time_points[0].interest_account[focused_interest_id].start_amount}
+      interest_rate={time_points[0].interest_account[focused_interest_id].rate}
+      interest_yearly_addition={time_points[0].interest_account[focused_interest_id].addition}
       on:delete_interest={HandleDeleteInterest} 
       on:close_edit_interest_menu={CloseInterestMenu}
       on:interest_label={HandleEditLabelInterest}

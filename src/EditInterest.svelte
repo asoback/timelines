@@ -3,11 +3,11 @@
 	import { createEventDispatcher } from 'svelte';
   const dispatch = createEventDispatcher();
   
-  let interest_label = "";
-	let interest_start_date = 0;
-	let interest_start_amount = 0;
-	let interest_rate = 0;
-	let interest_yearly_addition = 0;
+  export let interest_label = "";
+	export let interest_start_date = 0;
+	export let interest_start_amount = 0;
+	export let interest_rate = 0;
+	export let interest_yearly_addition = 0;
   let interest_end_date = 100;
   
   $: dispatch('interest_label', {
