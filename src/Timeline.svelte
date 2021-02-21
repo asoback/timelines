@@ -212,24 +212,56 @@
               time_points[i].interest_account[focused_interest_id].addition);
           amount = time_points[i].interest_account[focused_interest_id].amount;
         }
+        time_points[i].interest_account[focused_interest_id].start_date =
+          e.detail.interest_start_date;
       }
     }
   }
 
   const HandleEditStartAmountInterest = (e) => {
-    for (let i = 0; i < (end_time - start_time) * steps_per_unit; i++){
-      for (let j = 0; j < time_points[i].interest_account.length; j++) {
-        // TODO
-        // e.detail.interest_start_amount
+    let start = false;
+    let amount = 0;
+    for (let i = 0; i < (end_time - start_time) * steps_per_unit; i++) {
+      if (i % steps_per_unit == 0) {
+        if (i/steps_per_unit < time_points[i].interest_account[focused_interest_id].start_date) {
+          time_points[i].interest_account[focused_interest_id].amount = 0.0;
+        } else if (!start) {
+          amount = e.detail.interest_start_amount;
+          time_points[i].interest_account[focused_interest_id].amount = amount;
+          start = true;
+        } else {
+          time_points[i].interest_account[focused_interest_id].amount =
+            Math.trunc(
+              (amount *  (1 + time_points[i].interest_account[focused_interest_id].rate/100)) +
+              time_points[i].interest_account[focused_interest_id].addition);
+          amount = time_points[i].interest_account[focused_interest_id].amount;
+        }
+         time_points[i].interest_account[focused_interest_id].start_amount =
+          e.detail.interest_start_amount;
       }
     }
   }
 
   const HandleEditRateInterest = (e) => {
-    for (let i = 0; i < (end_time - start_time) * steps_per_unit; i++){
-      for (let j = 0; j < time_points[i].interest_account.length; j++) {
-        // TODO
-        // e.detail.interest_rate
+    let start = false;
+    let amount = 0;
+    for (let i = 0; i < (end_time - start_time) * steps_per_unit; i++) {
+      if (i % steps_per_unit == 0) {
+        if (i/steps_per_unit < time_points[i].interest_account[focused_interest_id].start_date) {
+          time_points[i].interest_account[focused_interest_id].amount = 0.0;
+        } else if (!start) {
+          amount = time_points[i].interest_account[focused_interest_id].start_amount;
+          time_points[i].interest_account[focused_interest_id].amount = amount;
+          start = true;
+        } else {
+          time_points[i].interest_account[focused_interest_id].amount =
+            Math.trunc(
+              (amount *  (1 +  e.detail.interest_rate/100)) +
+              time_points[i].interest_account[focused_interest_id].addition);
+          amount = time_points[i].interest_account[focused_interest_id].amount;
+        }
+         time_points[i].interest_account[focused_interest_id].interest_rate =
+          e.detail.interest_rate;
       }
     }
   }
