@@ -5,6 +5,7 @@
 
 	let time_scale = "y";
 	let expanded = true;
+  let class_name ="menu_button_open"
 	let time_menu_expanded = false;
 	let event_label = '';
 	let time_len = 10;
@@ -42,6 +43,9 @@
     if (!expanded) {
       time_menu_expanded = false;
       interest_menu_expanded = false;
+      class_name = "menu_button_closed"
+    } else {
+      class_name = "menu_button_open"
     }
 	}
 	
@@ -103,7 +107,7 @@
 		display: flexbox;
 		position: relative;
 		float: left;
-		margin-right: 50px;
+		margin-right: 10px;
 		border: 1px solid #CCCCCC;
 		background-color: aliceblue;
 	}
@@ -134,19 +138,63 @@
 		margin-right: 10px;
 		margin-right: 2px;
 	}
+
+  @keyframes spin {
+		from {
+			transform: rotate(0deg);
+		}
+		
+		to {
+			transform: rotate(45deg);
+		}
+	}
+
+  @keyframes spin_back {
+		from {
+			transform: rotate(45deg);
+		}
+		
+		to {
+			transform: rotate(0deg);
+		}
+	}
+
+  .menu_button_closed {
+    animation-name: spin_back;
+    animation-duration: 1000ms;
+  }
+
+  .menu_button_open {
+    animation-name: spin;
+    animation-duration: 1000ms;
+    transform: rotate(45deg);
+  }
+
+  .close_button {
+    height: 36px;
+    width: 36px;
+    background-color: white;
+    border-radius: 1px
+  }
+
+  .close_button:hover {
+    background-color:white;
+    box-shadow: 0px 0px 3px blue;
+  }
+
+  .container_close_div {
+    display: flexbox;
+		position: relative;
+		float: right;
+  }
+
 </style>
 
 <div class="container">
-	<div>
-	{#if expanded}
-		<button on:click={toggle}>
-			-
+	<div class="container_close_div">
+		<button class="close_button" on:click={toggle}>
+			<img class={class_name} src="close.png" alt="Close button">
 		</button>
-	{:else}
-		<button on:click={toggle}>
-			+
-		</button>
-	{/if}
 	</div>
 
 	<div class="main_menu">
